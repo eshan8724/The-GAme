@@ -19,6 +19,10 @@ public class Main implements Serializable {
 	static int myStage = 0;
 	static int myLevel = 0;
 
+	/**
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		initializeStages();
 		Main game = new Main();
