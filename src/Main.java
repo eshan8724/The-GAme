@@ -1,6 +1,11 @@
 import java.io.Serializable;
 import java.util.Scanner;
 
+/**
+ * first github change
+ * @author 501055002
+ *
+ */
 public class Main implements Serializable {
 
 	/**
