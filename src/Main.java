@@ -4,7 +4,7 @@ import java.util.Scanner;
 /**
  * first github change
  * @author 501055002
- *
+ *to get changes right click on the project and go to team and pull
  */
 public class Main implements Serializable {
 
@@ -12,24 +12,24 @@ public class Main implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	static int levelCount = 3, stageCount = 3;
-	static Stage[][] stages = new Stage[levelCount][stageCount];
-	static Player player = new Player();
-	static int total = 0;
-	static int myStage = 0;
-	static int myLevel = 0;
+	 int levelCount = 3, stageCount = 3;
+	 Stage[][] stages = new Stage[levelCount][stageCount];
+	 Player player = new Player();
+	 int total = 0;
+	 int myStage = 0;
+	 int myLevel = 0;
 
 	/**
 	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		initializeStages();
 		Main game = new Main();
 		game.start();
 	}
 
 	public void start() {
+		initializeStages();
 		Scanner kb = new Scanner(System.in);// This is my global input
 		System.out.println(stages[0][0].enemies[2]);
 		System.out
@@ -60,7 +60,7 @@ public class Main implements Serializable {
 		}
 	}
 
-	private static void levelandStages() {
+	private  void levelandStages() {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < stages.length; i++) {
 			for (int j = 0; j < stages[j].length; j++) {
@@ -94,7 +94,7 @@ public class Main implements Serializable {
 		}
 	}
 
-	private static void fight() {
+	private  void fight() {
 		// TODO Auto-generated method stub
 		System.out.println("how do you wish to attack first enter enemy code");
 		Scanner kb = new Scanner(System.in);
@@ -144,7 +144,7 @@ public class Main implements Serializable {
 		}
 	}
 
-	private static void initializeStages() {
+	private  void initializeStages() {
 		// Setup random characters
 		for (int i = 0; i < stages.length; i++) {
 			for (int j = 0; j < stages[i].length; j++) {
