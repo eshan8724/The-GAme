@@ -31,6 +31,9 @@ public class Player {
 		inventory.add(e);
 	}
 
+/**
+ * this creates my plyers inventory
+ */
 	public void printInventory() {
 		for (int i = 0; i < inventory.size(); i++) {
 			System.out.println(inventory.get(i).name);			
