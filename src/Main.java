@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Scanner;
 
@@ -15,6 +20,7 @@ public class Main implements Serializable {
 	/**
 	 * 
 	 */
+	String FILENAME = "game.save";
 	private static final long serialVersionUID = 1L;
 	int levelCount = 3, stageCount = 3;
 	Stage[][] stages = new Stage[levelCount][stageCount];
@@ -32,6 +38,27 @@ public class Main implements Serializable {
 		game.start();
 	}
 
+	public void loadGame() {
+		String line;
+		Scanner keyb = new Scanner(System.in);
+		BufferedReader inputStream;
+
+		try {
+			// Attempt to open the file
+			inputStream = new BufferedReader(new FileReader(FILENAME));
+			// Loop until the line read from the file
+			// is null, which means the end of the file
+			myLevel = Integer.parseInt(inputStream.readLine());
+			myStage = Integer.parseInt(inputStream.readLine());
+			inputStream.close();
+			// catching the general "Exception" will let
+			// us use one block to handle all errors
+		} catch (Exception ex) {
+			// For now, just output the error message
+			System.out.println(ex);
+		}
+	}
+
 	/**
 	 * this contains all my starting stuff it returns my welcome and story and
 	 * asks if you plyed before and sends you to level 1 and stage on if you did
@@ -40,33 +67,47 @@ public class Main implements Serializable {
 	public void start() {
 		initializeStages();
 		Scanner kb = new Scanner(System.in);// This is my global input
-		System.out.println(stages[0][0].enemies[2]);
-		System.out
-				.println("Welcome to Knights of the Tree you become lone Knight that protects the london tree");
-		System.out.println("Have you played this game before");
-		System.out.println("Yes");
-		System.out.println("No");
-		String sg = kb.nextLine();
-		if (sg.equalsIgnoreCase("yes")) {
-			// TODO filesystems
-		} else {
-			System.out.println("What is your knight name:");
-			player.setPlayerName(kb.nextLine());
+		boolean isAlive = false;
+		do {
+			System.out.println(stages[0][0].enemies[2]);
 			System.out
-					.println(player.playerName
-							+ " there is a war about to happen in the tree the don of england is attacking "
-							+ "\nus he  might kill us all he already stopped some food companies from bring "
-							+ "\nfood into the tree  and you are the last knight that can help us please help "
-							+ "\nus I will reward you with 50 pounds of gold and diamonds.Will you help her:");
-			String yes = kb.nextLine();
-			if (yes.equalsIgnoreCase("yes")) {
-				// start level one using a method
-				levelandStages();
+					.println("Welcome to Knights of the Tree you become lone Knight that protects the london tree");
+			System.out.println("Have you played this game before");
+			System.out.println("Yes");
+			System.out.println("No");
+			String sg = kb.nextLine();
+			if (sg.equalsIgnoreCase("yes")) {
+				loadGame();
+				isAlive = playLevels();
 			} else {
-				// create a way to restart
+				System.out.println("What is your knight name:");
+				player.setPlayerName(kb.nextLine());
+				System.out
+						.println(player.playerName
+								+ " there is a war about to happen in the tree the don of england is attacking "
+								+ "\nus he  might kill us all he already stopped some food companies from bring "
+								+ "\nfood into the tree  and you are the last knight that can help us please help "
+								+ "\nus I will reward you with 50 pounds of gold and diamonds.Will you help her:");
+				String yes = kb.nextLine();
+				if (yes.equalsIgnoreCase("yes")) {
+					// start level one using a method
+					isAlive = playLevels();
+				} else {
+					// create a way to restart
 
+				}
 			}
-		}
+			if (isAlive == false) {
+				System.out.println("do you want to play again (y) (n)");
+				String play = kb.nextLine();
+				if (play.equalsIgnoreCase("n")) {
+					break;
+				}
+			}
+			// did the player win?
+			// ask to play again; if no, break
+		} while (true);
+
 	}
 
 	/**
@@ -74,61 +115,76 @@ public class Main implements Serializable {
 	 * opens all of them as you pass through them and also prints out all my
 	 * eneimeis and the prize recived
 	 */
-	private void levelandStages() {
-		// TODO Auto-generated method stub
-		for (int i = 0; i < stages.length; i++) {
-			for (int j = 0; j < stages[i].length; j++) {
-				System.out.println("PRIZE: " + stages[i][j].prize[0]);
+	private boolean playLevels() {
+		while (myLevel < stages.length) {
+			while (myStage < stages[myLevel].length) {
+				System.out.println("PRIZE: "
+						+ stages[myLevel][myStage].prize[0]);
 				System.out.println("\nYou do a damage of "
-						+ stages[i][j].prize[0].damage);
+						+ stages[myLevel][myStage].prize[0].damage);
 				System.out.println("Your health is "
-						+ stages[i][j].prize[0].health + "\n");
+						+ stages[myLevel][myStage].prize[0].health + "\n");
 				System.out.println("your first enemie is "
-						+ stages[i][j].enemies[0] + " ENEMY CODE: \"one\" ");
+						+ stages[myLevel][myStage].enemies[0]
+						+ " ENEMY CODE: \"one\" ");
 				System.out.println("has a health of "
-						+ stages[i][j].enemies[0].health);
+						+ stages[myLevel][myStage].enemies[0].health);
 				System.out.println("does a damage of "
-						+ stages[i][j].enemies[0].damage);
+						+ stages[myLevel][myStage].enemies[0].damage);
 				System.out.println("your second enemie is "
-						+ stages[i][j].enemies[1] + " ENEMY CODE: \"two\"");
+						+ stages[myLevel][myStage].enemies[1]
+						+ " ENEMY CODE: \"two\"");
 				System.out.println("has a health of "
-						+ stages[i][j].enemies[1].health);
+						+ stages[myLevel][myStage].enemies[1].health);
 				System.out.println("does a damage of "
-						+ stages[i][j].enemies[1].damage);
+						+ stages[myLevel][myStage].enemies[1].damage);
 				System.out.println("your third enemie is "
-						+ stages[i][j].enemies[2] + " ENEMY CODE: \"three\"");
+						+ stages[myLevel][myStage].enemies[2]
+						+ " ENEMY CODE: \"three\"");
 				System.out.println("has a health of "
-						+ stages[i][j].enemies[2].health);
+						+ stages[myLevel][myStage].enemies[2].health);
 				System.out.println("does a damage of "
-						+ stages[i][j].enemies[2].damage);
-				myStage = j;
-				myLevel = i;
-				fight();
+						+ stages[myLevel][myStage].enemies[2].damage);
+				if (!fight()) {
+					return false;
+				}
+				savegame();
+				myStage++;
 			}
+			myStage = 0;
+			myLevel++;
 		}
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 	/**
 	 * this opens diffrent methods for each enemie
 	 */
-	private void fight() {
+	private boolean fight() {
 		// TODO Auto-generated method stub
 		System.out.println("who do you wish to attack first enter enemy code");
 		Scanner kb = new Scanner(System.in);
 		String yes = kb.nextLine();
 		if (yes.equalsIgnoreCase("one")) {
-			one();			
-		}else if(yes.equalsIgnoreCase("two")){
-			two();
-		}else if(yes.equalsIgnoreCase("three")){
-			three();
+			return fightFirstEnemy();
+		} else if (yes.equalsIgnoreCase("two")) {
+			fightSecondEnemy();
+		} else if (yes.equalsIgnoreCase("three")) {
+			fightThirdEnemy();
 		}
+		return true;
 	}
 
 	/**
 	 * this is all the options if you chose the first eneime
 	 */
-	private void one() {
+
+	/**
+	 * 
+	 * @return boolean true if player survives fight
+	 */
+	private boolean fightFirstEnemy() {
 		Scanner kb = new Scanner(System.in);
 		int enemie1 = stages[myLevel][myStage].enemies[0].health
 				- stages[myLevel][myStage].prize[0].damage;
@@ -158,8 +214,8 @@ public class Main implements Serializable {
 						// it to continue
 					} else if (total < 0) {
 						System.out
-								.println("you have faced to much damage you did well; you will now be taken back to the home screen");
-						start();
+								.println("you have faced too much damage you did well; you will now be taken back to the home screen");
+						return false; // died
 					} else {
 						System.out
 								.println("you have killed the second enemie but faced a damage of "
@@ -181,18 +237,20 @@ public class Main implements Serializable {
 			} else if (total < 0)
 				System.out
 						.println("you have faced to much damage you did well; you will now be taken back to the home screen");
-			//start();
+			return false;
 		} else if (enemie1 > 0) {
 			System.out
 					.println("You were not able to destroy the enemie he/she has a health of"
 							+ enemie1);
 			System.out.println("you now only have a health of " + total);
+			return false; //return false will mean the charcter died
 			// TODO make it so the eneime is still alive and faces damage of so
 			// kinda like the start but make the total the same
 		}
+		return true;
 	}
 
-	private void two() {
+	private boolean fightSecondEnemy() {
 		Scanner kb = new Scanner(System.in);
 		int enemie2 = stages[myLevel][myStage].enemies[1].health
 				- stages[myLevel][myStage].prize[0].damage;
@@ -223,7 +281,7 @@ public class Main implements Serializable {
 					} else if (total < 0) {
 						System.out
 								.println("you have faced to much damage you did well; you will now be taken back to the home screen");
-						//start();
+						start();
 					} else {
 						System.out
 								.println("you have killed the second enemie but faced a damage of "
@@ -245,7 +303,7 @@ public class Main implements Serializable {
 			} else if (total < 0)
 				System.out
 						.println("you have faced to much damage you did well; you will now be taken back to the home screen");
-			//start();
+			// start();
 		} else if (enemie2 > 0) {
 			System.out
 					.println("You were not able to destroy the enemie he/she has a health of"
@@ -254,9 +312,10 @@ public class Main implements Serializable {
 			// TODO make it so the eneime is still alive and faces damage of so
 			// kinda like the start but make the total the same
 		}
+	return true;
 	}
 
-	private void three() {
+	private boolean fightThirdEnemy() {
 		Scanner kb = new Scanner(System.in);
 		int enemie3 = stages[myLevel][myStage].enemies[2].health
 				- stages[myLevel][myStage].prize[0].damage;
@@ -287,7 +346,7 @@ public class Main implements Serializable {
 					} else if (total < 0) {
 						System.out
 								.println("you have faced to much damage you did well; you will now be taken back to the home screen");
-						//start();
+						// start();
 					} else {
 						System.out
 								.println("you have killed the second enemie but faced a damage of "
@@ -308,16 +367,17 @@ public class Main implements Serializable {
 				}
 			} else if (total < 0)
 				System.out
-						.println("you have faced to much damage you did well; you will now be taken back to the home screen");
-			//start();
+						.println("you have faced too much damage you did well; you will now be taken back to the home screen");
+			// start();
 		} else if (enemie3 > 0) {
 			System.out
 					.println("You were not able to destroy the enemie he/she has a health of"
 							+ enemie3);
 			System.out.println("you now only have a health of " + total);
-			// TODO make it so the eneime is still alive and faces damage of so
+			// TODO make it so the enemy is still alive and faces damage of so
 			// kinda like the start but make the total the same
 		}
+		return true;
 	}
 
 	/**
@@ -335,4 +395,20 @@ public class Main implements Serializable {
 		// "Final Boss";
 	}
 
+	private void savegame() {
+		PrintWriter outputStream = null;
+		try {
+			// Create a new file
+			outputStream = new PrintWriter(new FileWriter("game.save"));
+			outputStream.println(myLevel);
+			outputStream.println(myStage);
+		} catch (IOException ex) {
+			System.out.println(ex);
+		}
+		// Close the file if it is open
+		if (outputStream != null) {
+			outputStream.close();
+		}
+
+	}
 }

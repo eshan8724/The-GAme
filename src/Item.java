@@ -6,8 +6,8 @@ public class Item {
 
 	Item(int difficulty) {
 		name = getRandomName();
-		health = (int) ((Math.random() * 4) + 10 + (difficulty * 4));
-		damage = (int) ((Math.random() * 2) + 2 + (difficulty * 2));
+		health = (int) ((Math.random() * 4) + 4 + (difficulty * 4));
+		damage = (int) ((Math.random() * 2) + 4 + (difficulty * 2));
 	}
 
 	private String getRandomName() {
